@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Files
+test.py
+
+# temp folders
+data/processed_files/errors/errors_*

@@ -1,10 +1,12 @@
-from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType
+from data_process import DataLoad
 
-
-# SparkSession creation
-spark = SparkSession.builder.appName("globant_challenge")\
-    .config('spark.master','local[4]')\
-    .getOrCreate()
-
-# spark.read.csv('')
+SourceFile = 'data/source_files/jobs.csv'
+dataload = DataLoad(SourceFile, 'jobs', 'csv')
+dataload.csv_load()
+#print(dataload.data_frame.count())
+#dataload.data_frame.printSchema()
+dataload.apply_rules()
+#dataload.errors_data_frame.show()
+#dataload.final_data_frame.show()
+#print(dataload.final_data_frame.count())
+dataload.generate_erros_file('data/processed_files/errors/')
