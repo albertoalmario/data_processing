@@ -7,18 +7,19 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import col,lit
 from datetime import datetime
 import functools
-import schemas
+import parameters
+import sqlite3
 
 
 class DataLoad():
     """
-    This class load files using pyspark.
+    This class load files to a database using pyspark and pandas.
     """
     def __init__(self, p_source_file, p_table_destination,p_source_type='csv'):
         self.source_file=p_source_file
         self.table_destination=p_table_destination
         self.source_type=p_source_type
-        self.table_schema=schemas.getschema(self.table_destination)
+        self.table_schema=parameters.getschema(self.table_destination)
         self.data_frame=""
         self.final_data_frame=""
         self.errors_data_frame=""
@@ -46,13 +47,19 @@ class DataLoad():
             # set errors file name
             now = datetime.now()
             date_string = now.strftime("%Y%m%d_%H%M%S")
-            errors_filename = f"{output_folder}/errors_{self.table_destination}_{date_string}"
+            errors_filename = f"{output_folder}/errors_table_{self.table_destination}_{date_string}"
             # generate csv file with errors
-            self.errors_data_frame.write.options(header=True, delimiter='|', mode='overwrite').csv(errors_filename)
-            print(f'file generate: {errors_filename}')
+            # self.errors_data_frame.write.options(header=True, delimiter='|', mode='overwrite').csv(errors_filename) # Spark Version
+            self.errors_data_frame.toPandas().to_csv(f'{errors_filename}.csv', sep='|', header=True, index=False)
+            print(f'!!..errors file generate: --> {errors_filename}')
         else:
             print('no errors found')
 
+    def save_on_db(self):
+        conn = sqlite3.connect(parameters.DB_FILE)
+        self.final_data_frame.toPandas().to_sql(self.table_destination,conn,if_exists='replace',index=False)
+        conn.commit()
+        conn.close()
 
 if __name__ == '__main__':
     pass

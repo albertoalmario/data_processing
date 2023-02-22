@@ -132,4 +132,5 @@ dmypy.json
 test.py
 
 # temp folders
-data/processed_files/errors/errors_*
+data/processed_files/errors/*
+data/backups/AVRO*
