@@ -85,6 +85,6 @@ def truncate_table(table_name):
 
 if __name__ == '__main__':
     #pass
-    generate_backup("departments")    
+    #generate_backup("departments")    
     #restore_backup("data/backups/AVRO/departments_20230221_194950.avro", "departments")
-    #truncate_table("departments")
+    truncate_table("hired_employees")#jobs, departments, hired_employees

@@ -5,6 +5,7 @@
 from pyspark.sql.types import StructField, StructType, IntegerType, StringType
 import json
 
+SOURCE_FOLDER = 'data/source_files'
 ERRORS_FOLDER = 'data/processed_files/errors'
 BACKUP_FOLDER = 'data/backups/AVRO'
 DB_FILE = 'data/database/globant.sqlite'
